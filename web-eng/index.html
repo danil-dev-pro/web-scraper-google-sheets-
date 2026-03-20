@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Scraper → Google Sheets | Project Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0f;
+            color: #e0e0e0;
+        }
+
+        .code-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Animated gradient background */
+        .hero-gradient {
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a0a2e 25%, #0a1628 50%, #0f1a0a 75%, #0a0a0f 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Glowing cards */
+        .glow-card {
+            background: rgba(15, 15, 25, 0.8);
+            border: 1px solid rgba(100, 100, 255, 0.15);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .glow-card:hover {
+            border-color: rgba(100, 200, 255, 0.4);
+            box-shadow: 0 0 30px rgba(100, 150, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Stage indicator */
+        .stage-active {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+        }
+
+        /* Code block styling */
+        .code-block {
+            background: #0d1117;
+            border: 1px solid rgba(100, 100, 140, 0.2);
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+
+        .code-block pre {
+            padding: 1rem;
+            font-size: 0.8rem;
+            line-height: 1.6;
+        }
+
+        /* Pipeline flow animation */
+        .flow-arrow {
+            animation: flowPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes flowPulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+
+        /* Table styling */
+        .data-table {
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .data-table th {
+            background: rgba(59, 130, 246, 0.15);
+            border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .data-table td {
+            border-bottom: 1px solid rgba(100, 100, 140, 0.1);
+        }
+
+        .data-table tr:hover td {
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        /* Progress bar */
+        .progress-track {
+            background: rgba(30, 30, 50, 0.5);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #22c55e, #3b82f6, #a855f7);
+            border-radius: 999px;
+            transition: width 1.5s ease;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0a0f; }
+        ::-webkit-scrollbar-thumb { background: #2a2a3a; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3a3a4a; }
+
+        /* Feature badge */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.2rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge-green { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+        .badge-blue { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+        .badge-yellow { background: rgba(234, 179, 8, 0.15); color: #facc15; }
+        .badge-purple { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
+        .badge-gray { background: rgba(100, 100, 120, 0.15); color: #9ca3af; }
+
+        /* Confetti celebration */
+        .confetti-particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            animation: confettiFall linear forwards;
+        }
+
+        @keyframes confettiFall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* Celebration glow */
+        .celebration-glow {
+            animation: celebGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes celebGlow {
+            0%, 100% { text-shadow: 0 0 10px rgba(34, 197, 94, 0.3); }
+            50% { text-shadow: 0 0 30px rgba(34, 197, 94, 0.6), 0 0 60px rgba(59, 130, 246, 0.3); }
+        }
+
+        /* Smooth scroll */
+        html { scroll-behavior: smooth; }
+
+        /* Tab active state */
+        .tab-btn.active {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.5);
+            color: #60a5fa;
+        }
+
+        /* Typing animation for terminal */
+        .terminal-line {
+            opacity: 0;
+            animation: terminalType 0.3s ease forwards;
+        }
+
+        @keyframes terminalType {
+            from { opacity: 0; transform: translateX(-5px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen hero-gradient">
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- HEADER                                                              -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <header class="border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-green-500 flex items-center justify-center text-white font-bold text-sm">S</div>
+                <span class="text-lg font-semibold text-white">Scraper<span class="text-blue-400">→</span>Sheets</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="#quick-start" class="text-xs text-gray-400 hover:text-white transition-colors">Quick Start</a>
+                <a href="#pipeline" class="text-xs text-gray-400 hover:text-white transition-colors">Pipeline</a>
+                <a href="#features" class="text-xs text-gray-400 hover:text-white transition-colors">Features</a>
+                <a href="#files" class="text-xs text-gray-400 hover:text-white transition-colors">Files</a>
+                <span class="badge badge-green">● Complete</span>
+                <span class="text-xs text-gray-500 code-font">v1.0.0</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- HERO SECTION                                                        -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <section class="max-w-7xl mx-auto px-6 pt-12 pb-6">
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center gap-2 mb-4">
+                <span class="badge badge-green text-sm px-3 py-1">🎉 PROJECT COMPLETE</span>
+            </div>
+            <h1 class="text-5xl font-extrabold text-white mb-4 celebration-glow">
+                Web Scraper <span class="text-blue-400">→</span> Google Sheets
+            </h1>
+            <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+                Professional Python pipeline: scrape websites, clean data, export to Google Sheets — all automated with CLI & cron scheduling.
+            </p>
+        </div>
+
+        <!-- Overall progress -->
+        <div class="glow-card rounded-xl p-6 mb-8">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-sm font-medium text-gray-300">All 5 Stages Complete</span>
+                <span class="text-sm font-bold text-green-400" id="progress-text">100%</span>
+            </div>
+            <div class="progress-track h-3">
+                <div class="progress-fill h-full" id="progress-bar" style="width: 0%"></div>
+            </div>
+            <div class="flex justify-between mt-3 text-xs text-gray-500">
+                <span class="text-green-400">Stage 1 ✓</span>
+                <span class="text-green-400">Stage 2 ✓</span>
+                <span class="text-green-400">Stage 3 ✓</span>
+                <span class="text-green-400">Stage 4 ✓</span>
+                <span class="text-green-400">Stage 5 ✓</span>
+            </div>
+        </div>
+
+        <!-- 5 Stage Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-12">
+            <div class="rounded-xl p-5 stage-active text-white">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-lg">✓</span>
+                    <span class="text-xs font-bold uppercase tracking-wider opacity-80">Stage 1</span>
+                </div>
+                <h3 class="font-bold text-sm mb-1">Web Scraping</h3>
+                <p class="text-xs opacity-75">requests, BS4, retry, User-Agent rotation</p>
+            </div>
+
+            <div class="rounded-xl p-5 stage-active text-white">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-lg">✓</span>
+                    <span class="text-xs font-bold uppercase tracking-wider opacity-80">Stage 2</span>
+                </div>
+                <h3 class="font-bold text-sm mb-1">Data Processing</h3>
+                <p class="text-xs opacity-75">cleaning, validation, dedup, Pandas</p>
+            </div>
+
+            <div class="rounded-xl p-5 stage-active text-white">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-lg">✓</span>
+                    <span class="text-xs font-bold uppercase tracking-wider opacity-80">Stage 3</span>
+                </div>
+                <h3 class="font-bold text-sm mb-1">Google Sheets</h3>
+                <p class="text-xs opacity-75">gspread, formatting, timestamps</p>
+            </div>
+
+            <div class="rounded-xl p-5 stage-active text-white">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-lg">✓</span>
+                    <span class="text-xs font-bold uppercase tracking-wider opacity-80">Stage 4</span>
+                </div>
+                <h3 class="font-bold text-sm mb-1">Automation</h3>
+                <p class="text-xs opacity-75">CLI args, cron, tqdm progress</p>
+            </div>
+
+            <div class="rounded-xl p-5 stage-active text-white">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-lg">✓</span>
+                    <span class="text-xs font-bold uppercase tracking-wider opacity-80">Stage 5</span>
+                </div>
+                <h3 class="font-bold text-sm mb-1">Documentation</h3>
+                <p class="text-xs opacity-75">README, requirements, examples</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- QUICK START                                                         -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <section id="quick-start" class="max-w-7xl mx-auto px-6 pb-12">
+        <h2 class="text-2xl font-bold text-white mb-6">🚀 Quick Start</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Step 1: Install -->
+            <div class="glow-card rounded-xl p-6">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white font-bold">1</div>
+                    <h3 class="text-lg font-bold text-white">Install</h3>
+                </div>
+                <div class="code-block">
+                    <pre class="code-font text-green-300"><span class="text-gray-500"># Clone & install</span>
+git clone <span class="text-blue-300">repo-url</span>
+cd web-scraper-to-sheets
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt</pre>
+                </div>
+            </div>
+
+            <!-- Step 2: Run -->
+            <div class="glow-card rounded-xl p-6">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-green-500 to-green-700 flex items-center justify-center text-white font-bold">2</div>
+                    <h3 class="text-lg font-bold text-white">Run</h3>
+                </div>
+                <div class="code-block">
+                    <pre class="code-font text-green-300"><span class="text-gray-500"># Basic scrape (5 pages)</span>
+python main.py
+
+<span class="text-gray-500"># Save to CSV</span>
+python main.py -o data.csv
+
+<span class="text-gray-500"># Custom pages</span>
+python main.py --pages 10</pre>
+                </div>
+            </div>
+
+            <!-- Step 3: Export -->
+            <div class="glow-card rounded-xl p-6">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white font-bold">3</div>
+                    <h3 class="text-lg font-bold text-white">Export</h3>
+                </div>
+                <div class="code-block">
+                    <pre class="code-font text-green-300"><span class="text-gray-500"># Export to Google Sheets</span>
+python main.py --export
+
+<span class="text-gray-500"># Full pipeline</span>
+python main.py --pages 10 \
+  --export -o data.csv \
+  --verbose</pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- PIPELINE VISUALIZATION                                               -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <section id="pipeline" class="max-w-7xl mx-auto px-6 pb-12">
+        <h2 class="text-2xl font-bold text-white mb-6">⚡ Data Pipeline Flow</h2>
+
+        <div class="glow-card rounded-xl p-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="text-center flex-1">
+                    <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center text-2xl">🕷️</div>
+                    <h4 class="font-bold text-white text-sm">Scrape</h4>
+                    <p class="text-xs text-gray-400 mt-1">5 pages • retry • UA rotation</p>
+                    <span class="badge badge-green mt-2">stage 1</span>
+                </div>
+
+                <div class="text-2xl text-green-400 flow-arrow hidden md:block">→</div>
+
+                <div class="text-center flex-1">
+                    <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-2xl">🧹</div>
+                    <h4 class="font-bold text-white text-sm">Clean</h4>
+                    <p class="text-xs text-gray-400 mt-1">Text + price validation</p>
+                    <span class="badge badge-green mt-2">stage 2</span>
+                </div>
+
+                <div class="text-2xl text-green-400 flow-arrow hidden md:block">→</div>
+
+                <div class="text-center flex-1">
+                    <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-2xl">🔍</div>
+                    <h4 class="font-bold text-white text-sm">Deduplicate</h4>
+                    <p class="text-xs text-gray-400 mt-1">Remove dupes by link</p>
+                    <span class="badge badge-green mt-2">stage 2</span>
+                </div>
+
+                <div class="text-2xl text-green-400 flow-arrow hidden md:block">→</div>
+
+                <div class="text-center flex-1">
+                    <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center text-2xl">📊</div>
+                    <h4 class="font-bold text-white text-sm">DataFrame</h4>
+                    <p class="text-xs text-gray-400 mt-1">Pandas structured</p>
+                    <span class="badge badge-green mt-2">stage 2</span>
+                </div>
+
+                <div class="text-2xl text-green-400 flow-arrow hidden md:block">→</div>
+
+                <div class="text-center flex-1">
+                    <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-gradient-to-br from-green-600 to-green-800 flex items-center justify-center text-2xl">📗</div>
+                    <h4 class="font-bold text-white text-sm">Google Sheets</h4>
+                    <p class="text-xs text-gray-400 mt-1">Export formatted</p>
+                    <span class="badge badge-green mt-2">stage 3</span>
+                </div>
+
+                <div class="text-2xl text-green-400 flow-arrow hidden md:block">→</div>
+
+                <div class="text-center flex-1">
+                    <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-gradient-to-br from-yellow-500 to-orange-500 flex items-center justify-center text-2xl">⚡</div>
+                    <h4 class="font-bold text-white text-sm">CLI & Cron</h4>
+                    <p class="text-xs text-gray-400 mt-1">Automate schedule</p>
+                    <span class="badge badge-green mt-2">stage 4</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- TERMINAL DEMO                                                       -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <section class="max-w-7xl mx-auto px-6 pb-12">
+        <h2 class="text-2xl font-bold text-white mb-6">🖥️ Terminal Output Preview</h2>
+
+        <div class="glow-card rounded-xl overflow-hidden">
+            <!-- Terminal header -->
+            <div class="bg-gray-800/80 px-4 py-2 flex items-center gap-2 border-b border-white/5">
+                <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                <span class="text-xs text-gray-400 ml-3 code-font">python main.py --pages 5 --export -o data.csv</span>
+            </div>
+            <!-- Terminal body -->
+            <div class="bg-[#0d1117] p-6 code-font text-sm leading-relaxed overflow-x-auto" id="terminal-output">
+                <div class="text-gray-500">$ python main.py --pages 5 --export -o data.csv</div>
+                <br>
+                <div class="text-blue-300"> ╔══════════════════════════════════════════════════════════════╗</div>
+                <div class="text-blue-300"> ║          🌐  WEB SCRAPER → GOOGLE SHEETS EXPORTER  📊       ║</div>
+                <div class="text-blue-300"> ║          Scrape · Process · Export · Automate                 ║</div>
+                <div class="text-blue-300"> ╚══════════════════════════════════════════════════════════════╝</div>
+                <br>
+                <div class="text-gray-300">  Configuration:</div>
+                <div class="text-gray-400">    URL:          <span class="text-cyan-300">https://quotes.toscrape.com</span></div>
+                <div class="text-gray-400">    Pages:        <span class="text-yellow-300">5</span></div>
+                <div class="text-gray-400">    Output file:  <span class="text-yellow-300">data.csv</span></div>
+                <div class="text-gray-400">    Google Sheets: <span class="text-green-300">Yes</span></div>
+                <br>
+                <div class="text-white">  ┌─────────────────────────────────────────────────────────┐</div>
+                <div class="text-white">  │  STEP 1: WEB SCRAPING                                   │</div>
+                <div class="text-white">  │  Target: https://quotes.toscrape.com                     │</div>
+                <div class="text-white">  └─────────────────────────────────────────────────────────┘</div>
+                <br>
+                <div class="text-green-400">  Scraping pages: <span class="text-green-300">████████████████████████████████</span> 5/5  quotes=50</div>
+                <br>
+                <div class="text-green-400">  ✅ Scraped 50 items from 5 pages</div>
+                <br>
+                <div class="text-white">  ┌─────────────────────────────────────────────────────────┐</div>
+                <div class="text-white">  │  STEP 2: DATA PROCESSING                                │</div>
+                <div class="text-white">  └─────────────────────────────────────────────────────────┘</div>
+                <br>
+                <div class="text-blue-400">  Processing data: <span class="text-blue-300">████████████████████████████████</span> 5/5</div>
+                <br>
+                <div class="text-green-400">  ✅ Processed 42 unique items</div>
+                <div class="text-gray-400">      Price range:     <span class="text-green-300">$5.25 – $35.80</span></div>
+                <div class="text-gray-400">      Unique authors:  <span class="text-cyan-300">36</span></div>
+                <br>
+                <div class="text-white">  ┌─────────────────────────────────────────────────────────┐</div>
+                <div class="text-white">  │  STEP 3: SAVE TO FILE                                   │</div>
+                <div class="text-white">  └─────────────────────────────────────────────────────────┘</div>
+                <br>
+                <div class="text-green-400">  ✅ Saved to data.csv (2,847 bytes)</div>
+                <br>
+                <div class="text-white">  ┌─────────────────────────────────────────────────────────┐</div>
+                <div class="text-white">  │  STEP 4: GOOGLE SHEETS EXPORT                           │</div>
+                <div class="text-white">  └─────────────────────────────────────────────────────────┘</div>
+                <br>
+                <div class="text-yellow-400">  Exporting to Sheets: <span class="text-yellow-300">████████████████████████████</span> 5/5</div>
+                <br>
+                <div class="text-green-400">  ✅ Exported to Google Sheets!</div>
+                <div class="text-gray-400">      URL:   <span class="text-cyan-300">https://docs.google.com/spreadsheets/d/1abc...</span></div>
+                <div class="text-gray-400">      Title: <span class="text-cyan-300">Scraper Export 2025-06-15 14:30</span></div>
+                <div class="text-gray-400">      Rows:  <span class="text-cyan-300">42</span></div>
+                <br>
+                <div class="text-green-300">  ╔══════════════════════════════════════════════════════════╗</div>
+                <div class="text-green-300">  ║                   PIPELINE COMPLETE ✅                   ║</div>
+                <div class="text-green-300">  ╠══════════════════════════════════════════════════════════╣</div>
+                <div class="text-green-300">  ║  Started at       : <span class="text-white">2025-06-15 14:30:00</span>                 ║</div>
+                <div class="text-green-300">  ║  URL              : <span class="text-white">https://quotes.toscrape.com</span>         ║</div>
+                <div class="text-green-300">  ║  Pages scraped    : <span class="text-white">5</span>                                   ║</div>
+                <div class="text-green-300">  ║  Raw items        : <span class="text-white">50</span>                                  ║</div>
+                <div class="text-green-300">  ║  Processed rows   : <span class="text-white">42</span>                                  ║</div>
+                <div class="text-green-300">  ║  Saved to file    : <span class="text-white">data.csv</span>                            ║</div>
+                <div class="text-green-300">  ║  Google Sheet     : <span class="text-white">https://docs.google.com/spread...</span>   ║</div>
+                <div class="text-green-300">  ║  Total time       : <span class="text-white">12.3 seconds</span>                        ║</div>
+                <div class="text-green-300">  ╚══════════════════════════════════════════════════════════╝</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- SAMPLE DATA TABLE                                                    -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <section class="max-w-7xl mx-auto px-6 pb-12">
+        <h2 class="text-2xl font-bold text-white mb-6">📋 Sample Output Data</h2>
+
+        <div class="glow-card rounded-xl overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="data-table w-full text-sm" id="data-table">
+                    <thead>
+                        <tr>
+                            <th class="text-left px-4 py-3 text-xs font-bold text-blue-300 uppercase tracking-wider">#</th>
+                            <th class="text-left px-4 py-3 text-xs font-bold text-blue-300 uppercase tracking-wider">Title (Author)</th>
+                            <th class="text-left px-4 py-3 text-xs font-bold text-blue-300 uppercase tracking-wider">Description (Quote)</th>
+                            <th class="text-left px-4 py-3 text-xs font-bold text-blue-300 uppercase tracking-wider">Price</th>
+                            <th class="text-left px-4 py-3 text-xs font-bold text-blue-300 uppercase tracking-wider">Date</th>
+                            <th class="text-left px-4 py-3 text-xs font-bold text-blue-300 uppercase tracking-wider">Tags</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- FEATURES BY STAGE (TABS)                                            -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <section id="features" class="max-w-7xl mx-auto px-6 pb-12">
+        <h2 class="text-2xl font-bold text-white mb-6">🧩 Features by Stage</h2>
+
+        <!-- Tab Navigation -->
+        <div class="flex flex-wrap gap-2 mb-6">
+            <button class="tab-btn active px-4 py-2 text-sm font-medium rounded-lg border border-white/10 text-gray-300 hover:text-white transition-colors" data-tab="stage1">Stage 1: Scraping</button>
+            <button class="tab-btn px-4 py-2 text-sm font-medium rounded-lg border border-white/10 text-gray-300 hover:text-white transition-colors" data-tab="stage2">Stage 2: Processing</button>
+            <button class="tab-btn px-4 py-2 text-sm font-medium rounded-lg border border-white/10 text-gray-300 hover:text-white transition-colors" data-tab="stage3">Stage 3: Sheets</button>
+            <button class="tab-btn px-4 py-2 text-sm font-medium rounded-lg border border-white/10 text-gray-300 hover:text-white transition-colors" data-tab="stage4">Stage 4: Automation</button>
+            <button class="tab-btn px-4 py-2 text-sm font-medium rounded-lg border border-white/10 text-gray-300 hover:text-white transition-colors" data-tab="stage5">Stage 5: Docs</button>
+        </div>
+
+        <!-- Tab Content -->
+        <div id="tab-content">
+            <!-- Stage 1 -->
+            <div class="tab-panel" data-panel="stage1">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="glow-card rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-2xl">🔄</span>
+                            <h3 class="text-lg font-bold text-white">Retry Mechanism</h3>
+                        </div>
+                        <div class="code-block mb-3">
+                            <pre class="code-font text-green-300"><span class="text-gray-500"># 3 attempts with exponential backoff</span>
+Attempt 1: failed → wait 2s
+Attempt 2: failed → wait 4s
+Attempt 3: <span class="text-green-400">success!</span></pre>
+                        </div>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>✓ 3 retries with 2x backoff (2s, 4s, 6s)</li>
+                            <li>✓ Handles timeouts, 5xx errors, connection issues</li>
+                            <li>✓ Skips 404 pages (no retry)</li>
+                            <li>✓ 15-second request timeout</li>
+                        </ul>
+                    </div>
+
+                    <div class="glow-card rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-2xl">🎭</span>
+                            <h3 class="text-lg font-bold text-white">User-Agent Rotation</h3>
+                        </div>
+                        <div class="code-block mb-3">
+                            <pre class="code-font text-green-300"><span class="text-gray-500"># 5 different browser identities</span>
+Chrome 120 (Windows)
+Firefox 121 (Windows)
+Safari 17.2 (macOS)
+Edge 120 (Windows)
+Chrome 120 (macOS)</pre>
+                        </div>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>✓ Random selection per request</li>
+                            <li>✓ Realistic browser fingerprints</li>
+                            <li>✓ Reduces detection risk</li>
+                            <li>✓ Easy to add more UA strings</li>
+                        </ul>
+                    </div>
+
+                    <div class="glow-card rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-2xl">📄</span>
+                            <h3 class="text-lg font-bold text-white">Pagination</h3>
+                        </div>
+                        <div class="code-block mb-3">
+                            <pre class="code-font text-green-300"><span class="text-gray-500"># Auto-navigates through pages</span>
+/page/1/ → /page/2/ → ... → /page/N/
+<span class="text-gray-500"># Stops if page returns 404 or no data</span></pre>
+                        </div>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>✓ Configurable page count (1-100)</li>
+                            <li>✓ Polite 1-3s delay between pages</li>
+                            <li>✓ Auto-stops on empty pages</li>
+                            <li>✓ URL pattern: /page/{n}/</li>
+                        </ul>
+                    </div>
+
+                    <div class="glow-card rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-2xl">🕷️</span>
+                            <h3 class="text-lg font-bold text-white">HTML Parsing</h3>
+                        </div>
+                        <div class="code-block mb-3">
+                            <pre class="code-font text-green-300"><span class="text-gray-500"># BeautifulSoup4 extraction</span>
+soup.find("div", class_="quote")
+  → title, description, price,
+    date, link, tags</pre>
+                        </div>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>✓ BeautifulSoup4 + html.parser</li>
+                            <li>✓ Structured dict output per item</li>
+                            <li>✓ Error-safe (skips broken HTML)</li>
+                            <li>✓ Easy to customize for other sites</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 2 -->
+            <div class="tab-panel hidden" data-panel="stage2">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="glow-card rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-2xl">🧹</span>
+                            <h3 class="text-lg font-bold text-white">Text Cleaning</h3>
+                        </div>
+                        <div class="code-block mb-3">
+                            <pre class="code-font text-green-300"><span class="text-gray-500"># Input (raw):</span>
+"\u201cHello   World\u201d\n  "
+
+<span class="text-gray-500"># Output (clean):</span>
+"Hello World"</pre>
+                        </div>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>✓ Removes Unicode quotes (\u201c \u201d \u2018 \u2019)</li>
+                            <li>✓ Strips whitespace & control characters</li>
+                            <li>✓ Collapses multiple spaces</li>
+                            <li>✓ Handles em-dash \u2014 conversion</li>
+                        </ul>
+                    </div>
+
+                    <div class="glow-card rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-2xl">💰</span>
+                            <h3 class="text-lg font-bold text-white">Price Validation</h3>
+                        </div>
+                        <div class="code-block mb-3">
+                            <pre class="code-font text-green-300"><span class="text-gray-500"># Handles all formats:</span>
+validate_price("$12.99")  → 12.99
+validate_price("12,50")   → 12.50
+validate_price("free")    → 0.00
+validate_price(None)      → 0.00</pre>
+                        </div>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>✓ Extracts numbers from strings</li>
+                            <li>✓ Handles European comma format</li>
+                            <li>✓ Defaults invalid prices to 0.0</li>
+                            <li>✓ Rounds to 2 decimal places</li>
+                        </ul>
+                    </div>
+
+                    <div class="glow-card rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-2xl">🔍</span>
+                            <h3 class="text-lg font-bold text-white">Deduplication</h3>
+                        </div>
+                        <div class="code-block mb-3">
+                            <pre class="code-font text-green-300"><span class="text-gray-500"># Removes duplicates by key:</span>
+items = [
+  {link: "/a", title: "First"},
+  {link: "/b", title: "Second"},
+  {link: "/a", title: "Dupe!"},  <span class="text-red-400">← removed</span>
+]</pre>
+                        </div>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>✓ Configurable dedup key (default: link)</li>
+                            <li>✓ Keeps first occurrence</li>
+                            <li>✓ Logs number of duplicates found</li>
+                            <li>✓ O(n) performance with set lookup</li>
+                        </ul>
+                    </div>
+
+                    <div class="glow-card rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-2xl">🐼</span>
+                            <h3 class="text-lg font-bold text-white">Pandas DataFrame</h3>
+                        </div>
+                        <div class="code-block mb-3">
+                            <pre class="code-font text-green-300"><span class="text-gray-500"># Structured output:</span>
+df.shape     → (50, 6)
+df.columns   → [title, description,
+                 price, date, link, tags]
+df.dtypes    → price: float64</pre>
+                        </div>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>✓ Enforced column order & data types</li>
+                            <li>✓ Sorted alphabetically by title</li>
+                            <li>✓ Clean index (0, 1, 2...)</li>
+                            <li>✓ Summary statistics generation</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 3 -->
+            <div class="tab-panel hidden" data-panel="stage3">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="glow-card rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-2xl">🔐</span>
+                            <h3 class="text-lg font-bold text-white">Service Account Auth</h3>
+                        </div>
+                        <div class="code-block mb-3">
+                            <pre class="code-font text-green-300"><span class="text-gray-500"># Authenticate with Google API:</span>
+client = authenticate("credentials.json")
+<span class="text-gray-500"># → Uses OAuth2 Service Account</span>
+<span class="text-gray-500"># → Scopes: Sheets + Drive API</span></pre>
+                        </div>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>✓ Service Account via credentials.json</li>
+                            <li>✓ Google Sheets API + Drive API</li>
+                            <li>✓ Clear error messages for auth failures</li>
+                            <li>✓ credentials.json.example template provided</li>
+                        </ul>
+                    </div>
+
+                    <div class="glow-card rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-2xl">📗</span>
+                            <h3 class="text-lg font-bold text-white">Create or Open Sheet</h3>
+                        </div>
+                        <div class="code-block mb-3">
+                            <pre class="code-font text-green-300"><span class="text-gray-500"># Open existing:</span>
+sheet = get_or_create(id="1abc...")
+<span class="text-gray-500"># Or create new:</span>
+sheet = get_or_create(title="My Data")</pre>
+                        </div>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>✓ Open existing by spreadsheet ID</li>
+                            <li>✓ Auto-create new with timestamp title</li>
+                            <li>✓ Public link sharing (reader access)</li>
+                            <li>✓ Error handling for missing sheets</li>
+                        </ul>
+                    </div>
+
+                    <div class="glow-card rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-2xl">📤</span>
+                            <h3 class="text-lg font-bold text-white">Batch Upload</h3>
+                        </div>
+                        <div class="code-block mb-3">
+                            <pre class="code-font text-green-300"><span class="text-gray-500"># Upload DataFrame in one batch:</span>
+upload_data(spreadsheet, df)
+<span class="text-gray-500"># → Headers + all rows + timestamp</span>
+<span class="text-gray-500"># → Single API call (fast!)</span></pre>
+                        </div>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>✓ Single batch write (efficient API usage)</li>
+                            <li>✓ Headers in row 1, data rows 2+</li>
+                            <li>✓ Auto timestamp row at bottom</li>
+                            <li>✓ Clears existing data before write</li>
+                        </ul>
+                    </div>
+
+                    <div class="glow-card rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-2xl">🎨</span>
+                            <h3 class="text-lg font-bold text-white">Professional Formatting</h3>
+                        </div>
+                        <div class="code-block mb-3">
+                            <pre class="code-font text-green-300"><span class="text-gray-500"># Auto-applied formatting:</span>
+<span class="text-blue-300">■</span> Bold white headers on dark blue
+<span class="text-blue-300">■</span> Frozen header row
+<span class="text-blue-300">■</span> Auto-width columns (80-400px)
+<span class="text-blue-300">■</span> Currency format ($#,##0.00)
+<span class="text-blue-300">■</span> Zebra striping (alt rows)</pre>
+                        </div>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>✓ Bold headers with colored background</li>
+                            <li>✓ Column widths based on content length</li>
+                            <li>✓ Price column as $currency format</li>
+                            <li>✓ Alternating row colors for readability</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 4 -->
+            <div class="tab-panel hidden" data-panel="stage4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="glow-card rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-2xl">⌨️</span>
+                            <h3 class="text-lg font-bold text-white">CLI Arguments (argparse)</h3>
+                        </div>
+                        <div class="code-block mb-3">
+                            <pre class="code-font text-green-300"><span class="text-gray-500"># Full control from command line:</span>
+python main.py --pages 3 --output data.csv
+python main.py --export --sheet-id 1abc...
+python main.py --url https://example.com
+python main.py --dry-run --verbose</pre>
+                        </div>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>✓ --url, --pages for scraping control</li>
+                            <li>✓ --output for CSV/JSON/XLSX export</li>
+                            <li>✓ --export, --sheet-id for Google Sheets</li>
+                            <li>✓ --dry-run, --verbose, --log-file</li>
+                        </ul>
+                    </div>
+
+                    <div class="glow-card rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-2xl">📊</span>
+                            <h3 class="text-lg font-bold text-white">tqdm Progress Bar</h3>
+                        </div>
+                        <div class="code-block mb-3">
+                            <pre class="code-font text-green-300"><span class="text-gray-500"># Colored progress per step:</span>
+  Scraping:   <span class="text-green-300">████████████████</span> 5/5
+  Processing: <span class="text-blue-300">████████████████</span> 5/5
+  Exporting:  <span class="text-yellow-300">████████████████</span> 5/5</pre>
+                        </div>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>✓ Colored progress bars per pipeline step</li>
+                            <li>✓ Real-time postfix info (count, status)</li>
+                            <li>✓ Graceful fallback if tqdm not installed</li>
+                            <li>✓ 80-column width for terminal compatibility</li>
+                        </ul>
+                    </div>
+
+                    <div class="glow-card rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-2xl">⏰</span>
+                            <h3 class="text-lg font-bold text-white">Cron Scheduling</h3>
+                        </div>
+                        <div class="code-block mb-3">
+                            <pre class="code-font text-green-300"><span class="text-gray-500"># Run every day at 9 AM:</span>
+0 9 * * * cd /project && \
+  python3 main.py --export \
+  >> cron.log 2>&1
+
+<span class="text-gray-500"># Show cron help:</span>
+python main.py --cron-help</pre>
+                        </div>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>✓ Built-in --cron-help with examples</li>
+                            <li>✓ Linux/macOS crontab instructions</li>
+                            <li>✓ Windows Task Scheduler instructions</li>
+                            <li>✓ Log file support for debugging</li>
+                        </ul>
+                    </div>
+
+                    <div class="glow-card rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-2xl">🔄</span>
+                            <h3 class="text-lg font-bold text-white">Pipeline Orchestrator</h3>
+                        </div>
+                        <div class="code-block mb-3">
+                            <pre class="code-font text-green-300"><span class="text-gray-500"># Full pipeline in one command:</span>
+╔════════════════════════════╗
+║  PIPELINE COMPLETE ✅       ║
+╠════════════════════════════╣
+║ Raw items:    50           ║
+║ Processed:    42           ║
+║ Total time:   12.3s        ║
+╚════════════════════════════╝</pre>
+                        </div>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>✓ Pretty Unicode box-drawing output</li>
+                            <li>✓ Step-by-step progress headers</li>
+                            <li>✓ Final summary with all metrics</li>
+                            <li>✓ Ctrl+C graceful interrupt handling</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 5 -->
+            <div class="tab-panel hidden" data-panel="stage5">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="glow-card rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-2xl">📖</span>
+                            <h3 class="text-lg font-bold text-white">README.md</h3>
+                        </div>
+                        <div class="code-block mb-3">
+                            <pre class="code-font text-green-300"><span class="text-gray-500"># Comprehensive documentation:</span>
+├── Quick Start (3-step guide)
+├── CLI Reference (all 15+ flags)
+├── Google Sheets Setup (5 steps)
+├── Architecture Overview
+├── Troubleshooting FAQ
+└── Contributing Guide</pre>
+                        </div>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>✓ Badge icons (Python version, License)</li>
+                            <li>✓ ASCII pipeline diagram</li>
+                            <li>✓ Step-by-step Google API setup</li>
+                            <li>✓ Usage examples for every feature</li>
+                        </ul>
+                    </div>
+
+                    <div class="glow-card rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-2xl">📦</span>
+                            <h3 class="text-lg font-bold text-white">requirements.txt</h3>
+                        </div>
+                        <div class="code-block mb-3">
+                            <pre class="code-font text-green-300"><span class="text-gray-500"># All dependencies with comments:</span>
+requests>=2.31.0       <span class="text-gray-500"># HTTP</span>
+beautifulsoup4>=4.12.0 <span class="text-gray-500"># HTML</span>
+pandas>=2.1.0          <span class="text-gray-500"># Data</span>
+gspread>=5.12.0        <span class="text-gray-500"># Sheets</span>
+google-auth>=2.23.0    <span class="text-gray-500"># Auth</span>
+tqdm>=4.66.0           <span class="text-gray-500"># Progress</span>
+openpyxl>=3.1.0        <span class="text-gray-500"># Excel</span></pre>
+                        </div>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>✓ Organized by stage (1-4)</li>
+                            <li>✓ Minimum version pins (>=)</li>
+                            <li>✓ Comments explaining each package</li>
+                            <li>✓ Optional packages clearly labeled</li>
+                        </ul>
+                    </div>
+
+                    <div class="glow-card rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-2xl">🔑</span>
+                            <h3 class="text-lg font-bold text-white">credentials.json.example</h3>
+                        </div>
+                        <div class="code-block mb-3">
+                            <pre class="code-font text-green-300"><span class="text-gray-500"># Template for Google API key:</span>
+{
+  "type": "service_account",
+  "project_id": "<span class="text-yellow-300">YOUR_PROJECT_ID</span>",
+  "client_email": "<span class="text-yellow-300">YOUR_EMAIL</span>",
+  "private_key": "<span class="text-yellow-300">YOUR_KEY</span>"
+}</pre>
+                        </div>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>✓ All 11 required fields shown</li>
+                            <li>✓ Clear placeholder values</li>
+                            <li>✓ Copy → rename → fill in</li>
+                            <li>✓ Security warning in README</li>
+                        </ul>
+                    </div>
+
+                    <div class="glow-card rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-2xl">🖥️</span>
+                            <h3 class="text-lg font-bold text-white">Dashboard (index.html)</h3>
+                        </div>
+                        <div class="code-block mb-3">
+                            <pre class="code-font text-green-300"><span class="text-gray-500"># This interactive dashboard:</span>
+├── Progress overview (5/5 ✓)
+├── Pipeline flow visualization
+├── Terminal output preview
+├── Sample data table
+├── Features by stage (tabs)
+└── Tech stack showcase</pre>
+                        </div>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>✓ Tailwind CSS + custom animations</li>
+                            <li>✓ Dark theme with glow effects</li>
+                            <li>✓ Interactive tab navigation</li>
+                            <li>✓ Confetti celebration on load 🎉</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- TECH STACK                                                          -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <section class="max-w-7xl mx-auto px-6 pb-12">
+        <h2 class="text-2xl font-bold text-white mb-6">🛠️ Tech Stack</h2>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="glow-card rounded-xl p-5 text-center">
+                <div class="text-3xl mb-2">🐍</div>
+                <h4 class="font-bold text-white text-sm">Python 3.8+</h4>
+                <p class="text-xs text-gray-400 mt-1">Core language</p>
+            </div>
+            <div class="glow-card rounded-xl p-5 text-center">
+                <div class="text-3xl mb-2">🌐</div>
+                <h4 class="font-bold text-white text-sm">requests</h4>
+                <p class="text-xs text-gray-400 mt-1">HTTP client</p>
+            </div>
+            <div class="glow-card rounded-xl p-5 text-center">
+                <div class="text-3xl mb-2">🥣</div>
+                <h4 class="font-bold text-white text-sm">BeautifulSoup4</h4>
+                <p class="text-xs text-gray-400 mt-1">HTML parser</p>
+            </div>
+            <div class="glow-card rounded-xl p-5 text-center">
+                <div class="text-3xl mb-2">🐼</div>
+                <h4 class="font-bold text-white text-sm">Pandas</h4>
+                <p class="text-xs text-gray-400 mt-1">Data processing</p>
+            </div>
+            <div class="glow-card rounded-xl p-5 text-center">
+                <div class="text-3xl mb-2">📗</div>
+                <h4 class="font-bold text-white text-sm">gspread</h4>
+                <p class="text-xs text-gray-400 mt-1">Google Sheets API</p>
+            </div>
+            <div class="glow-card rounded-xl p-5 text-center">
+                <div class="text-3xl mb-2">🔐</div>
+                <h4 class="font-bold text-white text-sm">google-auth</h4>
+                <p class="text-xs text-gray-400 mt-1">OAuth2 auth</p>
+            </div>
+            <div class="glow-card rounded-xl p-5 text-center">
+                <div class="text-3xl mb-2">📊</div>
+                <h4 class="font-bold text-white text-sm">tqdm</h4>
+                <p class="text-xs text-gray-400 mt-1">Progress bars</p>
+            </div>
+            <div class="glow-card rounded-xl p-5 text-center">
+                <div class="text-3xl mb-2">⌨️</div>
+                <h4 class="font-bold text-white text-sm">argparse</h4>
+                <p class="text-xs text-gray-400 mt-1">CLI interface</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- FILE STRUCTURE                                                       -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <section id="files" class="max-w-7xl mx-auto px-6 pb-12">
+        <h2 class="text-2xl font-bold text-white mb-6">📁 Project Structure</h2>
+
+        <div class="glow-card rounded-xl p-6">
+            <pre class="code-font text-sm leading-relaxed">
+<span class="text-blue-400">📁 web-scraper-to-sheets/</span>
+│
+├── <span class="text-green-400">scraper.py</span>               ← Stage 1: Web Scraping Engine       <span class="badge badge-green">319 lines</span>
+│     ├── fetch_page()       <span class="text-gray-500"># HTTP GET with retry + UA rotation</span>
+│     └── parse_quote()      <span class="text-gray-500"># BeautifulSoup HTML → dict</span>
+│
+├── <span class="text-green-400">data_processor.py</span>        ← Stage 2: Data Processing Pipeline  <span class="badge badge-green">414 lines</span>
+│     ├── clean_text()       <span class="text-gray-500"># Remove Unicode, whitespace</span>
+│     ├── validate_price()   <span class="text-gray-500"># "$12.99" → 12.99</span>
+│     ├── deduplicate()      <span class="text-gray-500"># Remove dupes by link</span>
+│     └── process_data()     <span class="text-gray-500"># Full pipeline → DataFrame</span>
+│
+├── <span class="text-green-400">sheets_export.py</span>         ← Stage 3: Google Sheets Export      <span class="badge badge-green">600 lines</span>
+│     ├── authenticate()     <span class="text-gray-500"># Service Account OAuth2</span>
+│     ├── get_or_create()    <span class="text-gray-500"># Open/create spreadsheet</span>
+│     ├── upload_data()      <span class="text-gray-500"># Batch write + timestamp</span>
+│     └── format_sheet()     <span class="text-gray-500"># Bold, auto-width, zebra</span>
+│
+├── <span class="text-green-400">main.py</span>                  ← Stage 4: CLI Orchestrator          <span class="badge badge-green">770 lines</span>
+│     ├── parse_arguments()  <span class="text-gray-500"># argparse with 15+ flags</span>
+│     ├── run_pipeline()     <span class="text-gray-500"># Scrape → Process → Export</span>
+│     ├── print_cron_help()  <span class="text-gray-500"># Cron scheduling guide</span>
+│     └── main()             <span class="text-gray-500"># Entry point</span>
+│
+├── <span class="text-green-400">requirements.txt</span>         ← Stage 5: Python Dependencies       <span class="badge badge-purple">8 packages</span>
+├── <span class="text-green-400">README.md</span>                ← Stage 5: Full Documentation         <span class="badge badge-purple">350+ lines</span>
+├── <span class="text-green-400">credentials.json.example</span> ← Stage 3: Google API Template        <span class="badge badge-purple">template</span>
+└── <span class="text-yellow-400">index.html</span>               ← Dashboard (this page)              <span class="badge badge-yellow">portfolio</span>
+
+<span class="text-gray-500">Total: ~2,100 lines of Python + documentation</span>
+            </pre>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- CLI REFERENCE                                                       -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <section class="max-w-7xl mx-auto px-6 pb-12">
+        <h2 class="text-2xl font-bold text-white mb-6">📋 CLI Reference</h2>
+
+        <div class="glow-card rounded-xl overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="data-table w-full text-sm">
+                    <thead>
+                        <tr>
+                            <th class="text-left px-4 py-3 text-xs font-bold text-blue-300 uppercase">Flag</th>
+                            <th class="text-left px-4 py-3 text-xs font-bold text-blue-300 uppercase">Default</th>
+                            <th class="text-left px-4 py-3 text-xs font-bold text-blue-300 uppercase">Description</th>
+                            <th class="text-left px-4 py-3 text-xs font-bold text-blue-300 uppercase">Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover:bg-white/5"><td class="px-4 py-3 code-font text-cyan-300 text-xs">--url</td><td class="px-4 py-3 text-gray-400 text-xs">quotes.toscrape.com</td><td class="px-4 py-3 text-gray-300 text-xs">Base URL to scrape</td><td class="px-4 py-3 code-font text-gray-500 text-xs">--url https://example.com</td></tr>
+                        <tr class="hover:bg-white/5"><td class="px-4 py-3 code-font text-cyan-300 text-xs">--pages</td><td class="px-4 py-3 text-gray-400 text-xs">5</td><td class="px-4 py-3 text-gray-300 text-xs">Number of pages to scrape</td><td class="px-4 py-3 code-font text-gray-500 text-xs">--pages 10</td></tr>
+                        <tr class="hover:bg-white/5"><td class="px-4 py-3 code-font text-cyan-300 text-xs">--output, -o</td><td class="px-4 py-3 text-gray-400 text-xs">None</td><td class="px-4 py-3 text-gray-300 text-xs">Save to .csv / .json / .xlsx</td><td class="px-4 py-3 code-font text-gray-500 text-xs">-o data.csv</td></tr>
+                        <tr class="hover:bg-white/5"><td class="px-4 py-3 code-font text-cyan-300 text-xs">--export</td><td class="px-4 py-3 text-gray-400 text-xs">False</td><td class="px-4 py-3 text-gray-300 text-xs">Export to Google Sheets</td><td class="px-4 py-3 code-font text-gray-500 text-xs">--export</td></tr>
+                        <tr class="hover:bg-white/5"><td class="px-4 py-3 code-font text-cyan-300 text-xs">--sheet-id</td><td class="px-4 py-3 text-gray-400 text-xs">None</td><td class="px-4 py-3 text-gray-300 text-xs">Existing sheet ID to update</td><td class="px-4 py-3 code-font text-gray-500 text-xs">--sheet-id 1abc...</td></tr>
+                        <tr class="hover:bg-white/5"><td class="px-4 py-3 code-font text-cyan-300 text-xs">--sheet-title</td><td class="px-4 py-3 text-gray-400 text-xs">Auto</td><td class="px-4 py-3 text-gray-300 text-xs">Title for new sheet</td><td class="px-4 py-3 code-font text-gray-500 text-xs">--sheet-title "Report"</td></tr>
+                        <tr class="hover:bg-white/5"><td class="px-4 py-3 code-font text-cyan-300 text-xs">--credentials</td><td class="px-4 py-3 text-gray-400 text-xs">credentials.json</td><td class="px-4 py-3 text-gray-300 text-xs">Google API key file</td><td class="px-4 py-3 code-font text-gray-500 text-xs">--credentials key.json</td></tr>
+                        <tr class="hover:bg-white/5"><td class="px-4 py-3 code-font text-cyan-300 text-xs">--verbose, -v</td><td class="px-4 py-3 text-gray-400 text-xs">False</td><td class="px-4 py-3 text-gray-300 text-xs">Enable DEBUG logging</td><td class="px-4 py-3 code-font text-gray-500 text-xs">--verbose</td></tr>
+                        <tr class="hover:bg-white/5"><td class="px-4 py-3 code-font text-cyan-300 text-xs">--log-file</td><td class="px-4 py-3 text-gray-400 text-xs">None</td><td class="px-4 py-3 text-gray-300 text-xs">Save logs to file</td><td class="px-4 py-3 code-font text-gray-500 text-xs">--log-file run.log</td></tr>
+                        <tr class="hover:bg-white/5"><td class="px-4 py-3 code-font text-cyan-300 text-xs">--dry-run</td><td class="px-4 py-3 text-gray-400 text-xs">False</td><td class="px-4 py-3 text-gray-300 text-xs">Preview without executing</td><td class="px-4 py-3 code-font text-gray-500 text-xs">--dry-run</td></tr>
+                        <tr class="hover:bg-white/5"><td class="px-4 py-3 code-font text-cyan-300 text-xs">--cron-help</td><td class="px-4 py-3 text-gray-400 text-xs">—</td><td class="px-4 py-3 text-gray-300 text-xs">Show cron scheduling guide</td><td class="px-4 py-3 code-font text-gray-500 text-xs">--cron-help</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- FOOTER                                                               -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <footer class="border-t border-white/5 py-8">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <div class="mb-4">
+                <span class="text-2xl">🎉</span>
+            </div>
+            <p class="text-gray-300 font-medium mb-2">Project Complete — All 5 Stages Done!</p>
+            <p class="text-gray-500 text-sm mb-4">Web Scraper → Google Sheets Pipeline • ~2,100 lines of Python</p>
+            <div class="flex items-center justify-center gap-4 text-xs text-gray-600">
+                <span class="code-font">v1.0.0</span>
+                <span>•</span>
+                <span>Python 3.8+</span>
+                <span>•</span>
+                <span>MIT License</span>
+                <span>•</span>
+                <span>Stages: 5/5 ✓</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- JAVASCRIPT                                                           -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <script>
+        // ─────────────────────────────────────────────────────────────────
+        // SAMPLE DATA TABLE
+        // ─────────────────────────────────────────────────────────────────
+        const sampleData = [
+            { title: "Albert Einstein", description: "The world as we have created it is a process of our thinking. It cannot be changed without changing our thinking.", price: 24.57, date: "2025-06-15", tags: "change, deep-thoughts, thinking, world" },
+            { title: "J.K. Rowling", description: "It is our choices, Harry, that show what we truly are, far more than our abilities.", price: 17.32, date: "2025-06-15", tags: "abilities, choices" },
+            { title: "Albert Einstein", description: "There are only two ways to live your life. One is as though nothing is a miracle. The other is as though everything is a miracle.", price: 19.45, date: "2025-06-15", tags: "inspirational, life, live, miracle" },
+            { title: "Jane Austen", description: "The person, be it gentleman or lady, who has not pleasure in a good novel, must be intolerably stupid.", price: 22.18, date: "2025-06-15", tags: "aliteracy, books, classic, humor" },
+            { title: "Marilyn Monroe", description: "Imperfection is beauty, madness is genius and it's better to be absolutely ridiculous than absolutely boring.", price: 21.90, date: "2025-06-15", tags: "be-yourself, inspirational" },
+            { title: "Andre Gide", description: "It is better to be hated for what you are than to be loved for what you are not.", price: 11.25, date: "2025-06-15", tags: "life, love" },
+            { title: "Thomas A. Edison", description: "I have not failed. I've just found 10,000 ways that won't work.", price: 18.77, date: "2025-06-15", tags: "edison, failure, inspirational" },
+            { title: "Eleanor Roosevelt", description: "A woman is like a tea bag; you never know how strong it is until it's in hot water.", price: 13.42, date: "2025-06-15", tags: "misattributed-eleanor-roosevelt" },
+        ];
+
+        const tbody = document.getElementById("table-body");
+        sampleData.forEach((item, index) => {
+            const row = document.createElement("tr");
+            row.className = "hover:bg-white/5 transition-colors";
+            const descShort = item.description.length > 70
+                ? item.description.substring(0, 70) + "..."
+                : item.description;
+            row.innerHTML = `
+                <td class="px-4 py-3 text-gray-500 code-font text-xs">${index + 1}</td>
+                <td class="px-4 py-3 text-white font-medium text-sm">${item.title}</td>
+                <td class="px-4 py-3 text-gray-300 text-xs">${descShort}</td>
+                <td class="px-4 py-3 text-green-400 code-font font-semibold">$${item.price.toFixed(2)}</td>
+                <td class="px-4 py-3 text-gray-400 code-font text-xs">${item.date}</td>
+                <td class="px-4 py-3">
+                    <div class="flex flex-wrap gap-1">
+                        ${item.tags.split(", ").map(tag =>
+                            `<span class="badge badge-blue">${tag}</span>`
+                        ).join("")}
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+
+        // ─────────────────────────────────────────────────────────────────
+        // TAB NAVIGATION
+        // ─────────────────────────────────────────────────────────────────
+        document.querySelectorAll(".tab-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+                // Remove active from all tabs
+                document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+
+                // Hide all panels, show the selected one
+                const tabName = btn.dataset.tab;
+                document.querySelectorAll(".tab-panel").forEach(panel => {
+                    panel.classList.toggle("hidden", panel.dataset.panel !== tabName);
+                });
+            });
+        });
+
+        // ─────────────────────────────────────────────────────────────────
+        // PROGRESS BAR ANIMATION ON LOAD
+        // ─────────────────────────────────────────────────────────────────
+        window.addEventListener("load", () => {
+            setTimeout(() => {
+                document.getElementById("progress-bar").style.width = "100%";
+            }, 300);
+
+            // Launch confetti celebration
+            launchConfetti();
+        });
+
+        // ─────────────────────────────────────────────────────────────────
+        // CONFETTI CELEBRATION 🎉
+        // ─────────────────────────────────────────────────────────────────
+        function launchConfetti() {
+            const colors = ["#22c55e", "#3b82f6", "#a855f7", "#facc15", "#f472b6", "#f97316"];
+            const shapes = ["●", "■", "▲", "★", "◆"];
+
+            for (let i = 0; i < 60; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement("div");
+                    particle.className = "confetti-particle";
+                    particle.textContent = shapes[Math.floor(Math.random() * shapes.length)];
+                    particle.style.left = Math.random() * 100 + "vw";
+                    particle.style.color = colors[Math.floor(Math.random() * colors.length)];
+                    particle.style.fontSize = (Math.random() * 14 + 8) + "px";
+                    particle.style.animationDuration = (Math.random() * 3 + 2) + "s";
+                    document.body.appendChild(particle);
+
+                    // Remove after animation
+                    setTimeout(() => particle.remove(), 5000);
+                }, i * 50);
+            }
+        }
+    </script>
+
+</body>
+</html>

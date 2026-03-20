@@ -1,0 +1,24 @@
+# =============================================================================
+#  Web Scraper → Google Sheets Pipeline
+#  Python Dependencies
+# =============================================================================
+#  Install all:  pip install -r requirements.txt
+# =============================================================================
+
+# ── Stage 1: Web Scraping ───────────────────────────────────────────────────
+requests>=2.31.0           # HTTP requests with sessions, retries, timeouts
+beautifulsoup4>=4.12.0     # HTML parsing and data extraction
+lxml>=4.9.0                # Fast HTML/XML parser (optional, faster than html.parser)
+
+# ── Stage 2: Data Processing ────────────────────────────────────────────────
+pandas>=2.1.0              # DataFrame for structured data manipulation
+
+# ── Stage 3: Google Sheets Export ────────────────────────────────────────────
+gspread>=5.12.0            # Google Sheets API wrapper (read/write spreadsheets)
+google-auth>=2.23.0        # Google authentication (service account, OAuth2)
+
+# ── Stage 4: Automation & CLI ────────────────────────────────────────────────
+tqdm>=4.66.0               # Beautiful progress bars in the terminal
+
+# ── Optional: Export Formats ─────────────────────────────────────────────────
+openpyxl>=3.1.0            # Excel (.xlsx) file export support
